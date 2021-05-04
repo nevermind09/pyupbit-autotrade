@@ -2,8 +2,8 @@ import time
 import pyupbit
 import datetime
 
-access = "your-access"
-secret = "your-secret"
+access = "key"          # 본인 값으로 변경
+secret = "key"          # 본인 값으로 변경
 
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
@@ -39,22 +39,22 @@ print("autotrade start")
 while True:
     try:
         now = datetime.datetime.now()
-        start_time = get_start_time("KRW-XRP")
+        start_time = get_start_time("KRW-ETC")
         end_time = start_time + datetime.timedelta(days=1)
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
-            target_price = get_target_price("KRW-XRP", 0.4)
-            current_price = get_current_price("KRW-XRP")
+            target_price = get_target_price("KRW-ETC", 0.4)
+            current_price = get_current_price("KRW-ETC")
+            print("target : ", target_price, "current_price : ",current_price)
             if target_price < current_price:
                 krw = get_balance("KRW")
                 if krw > 5000:
-                    upbit.buy_market_order("KRW-XRP", krw*0.9995)
+                    upbit.buy_market_order("KRW-ETC", krw*0.9995)
         else:
-            btc = get_balance("XRP")
-            if btc > 0.001:
-                upbit.sell_market_order("KRW-XRP", btc*0.9995)
+            btc = get_balance("ETC")
+            if btc > 0.00008:
+                upbit.sell_market_order("KRW-ETC", btc*0.9995)
         time.sleep(1)
-        print(get_balance("XRP"))
     except Exception as e:
         print(e)
         time.sleep(1)
