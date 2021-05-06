@@ -35,6 +35,7 @@ def get_current_price(ticker):
 upbit = pyupbit.Upbit(access, secret)
 print("autotrade start")
 
+
 # 자동매매 시작
 while True:
     try:
@@ -44,17 +45,19 @@ while True:
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
             target_price = get_target_price("KRW-ETC", 0.4)
+
             current_price = get_current_price("KRW-ETC")
-            print("target : ", target_price, "current_price : ",current_price)
             if target_price < current_price:
                 krw = get_balance("KRW")
                 if krw > 5000:
-                    upbit.buy_market_order("KRW-ETC", krw*0.9995)
+                    upbit.buy_market_order("KRW-ETC", 450000)
         else:
             btc = get_balance("ETC")
             if btc > 0.00008:
                 upbit.sell_market_order("KRW-ETC", btc*0.9995)
-        time.sleep(1)
+        time.sleep(60)
+        btc = round(get_balance("ETC")*get_current_price("KRW-ETC"),0)
+        print(now, ", target : ", target_price, ", my balance : ", btc, " ,price : ",get_current_price("KRW-ETC"))
     except Exception as e:
         print(e)
-        time.sleep(1)
+        time.sleep(60)
