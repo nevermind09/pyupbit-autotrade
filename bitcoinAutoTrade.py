@@ -50,11 +50,11 @@ while True:
             if target_price < current_price:
                 krw = get_balance("KRW")
                 if krw > 5000:
-                    upbit.buy_market_order("KRW-ETC", 450000)
+                    upbit.buy_market_order("KRW-ETC", 500000)
         else:
             btc = get_balance("ETC")
             if btc > 0.00008:
-                upbit.sell_market_order("KRW-ETC", btc*0.9995)
+                upbit.sell_market_order("KRW-ETC", btc)
         time.sleep(60)
         btc = round(get_balance("ETC")*get_current_price("KRW-ETC"),0)
         print(now, ", target : ", target_price, ", my balance : ", btc, " ,price : ",get_current_price("KRW-ETC"))
