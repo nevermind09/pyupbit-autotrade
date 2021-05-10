@@ -56,6 +56,11 @@ while True:
 
             if now.replace(hour=9, minute=0, second=0, microsecond=0) <= now <= now.replace(hour=9, minute=10, second=0, microsecond=0):
                 time.sleep(600)
+                text = open("./balane_history.txt", 'a')
+                mybl = get_balance("KRW")
+                data = str(now) +"," +str(mybl)+"\n"
+                text.write(data)
+                text.close()
                 selectCocde.selectCode()
                 print("Select code pass")
             elif start_time < now < end_time - datetime.timedelta(seconds=60):
