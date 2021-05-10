@@ -1,5 +1,5 @@
 import time
-
+import selectCocde
 import pandas as pd
 import pyupbit
 import datetime
@@ -37,28 +37,34 @@ def get_current_price(ticker):
 upbit = pyupbit.Upbit(access, secret)
 print("AutoTrade Start")
 
+def get_list():
+    return  pd.read_csv("./today_list.csv")
 
-pd_list = pd.read_csv("./today_list.csv")
 
 
 # 자동매매 시작
 while True:
     try:
         for k in range(0,5):
+            pd_list = get_list()
             coinCodeK = pd_list.iloc[k][1]
-            print(coinCodeK)
+            #print(coinCodeK)
             coinCode = pd_list.iloc[k][1].replace("KRW-","")
             now = datetime.datetime.now()
             start_time = get_start_time(coinCodeK)
             end_time = start_time + datetime.timedelta(days=1)
 
-            if start_time < now < end_time - datetime.timedelta(seconds=10):
+            if now.replace(hour=9, minute=0, second=0, microsecond=0) <= now <= now.replace(hour=9, minute=10, second=0, microsecond=0):
+                time.sleep(600)
+                selectCocde.selectCode()
+                print("Select code pass")
+            elif start_time < now < end_time - datetime.timedelta(seconds=60):
                 target_price = get_target_price(coinCodeK, 0.4)
 
                 current_price = get_current_price(coinCodeK)
                 if target_price < current_price:
                     krw = get_balance("KRW")
-                    if krw > 5000 and get_balance(coinCode) != "None":
+                    if krw > 5000 and get_balance(coinCode) < 0.00001 :
                         upbit.buy_market_order(coinCodeK, 500000)
 
             else:
@@ -67,7 +73,7 @@ while True:
                     upbit.sell_market_order(coinCodeK, btc)
 
             btc = get_balance(coinCode)
-            print(now, ", target : ", target_price, ", my balance : ", btc, " ,price : ", get_current_price(coinCodeK))
+            print(coinCodeK ,": ", now, ", target : ", target_price,  " ,price : ", get_current_price(coinCodeK),", my balance : ", btc)
             time.sleep(2)
 
     except Exception as e:
