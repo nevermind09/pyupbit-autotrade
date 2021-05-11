@@ -69,7 +69,11 @@ while True:
                 current_price = get_current_price(coinCodeK)
                 if target_price < current_price:
                     krw = get_balance("KRW")
-                    if krw > 5000 and get_balance(coinCode) < 0.00001 :
+                    if str(type(get_balance(coinCode))) == "<class 'NoneType'>":
+                        bal = 0
+                    else:
+                        bal = get_balance(coinCode)
+                    if krw > 5000 and bal < 0.00001 :
                         upbit.buy_market_order(coinCodeK, 500000)
 
             else:
